@@ -1,9 +1,15 @@
 import React from 'react';
 import './App.css';
+import Requisition from './components/Requisition';
+import Table from './components/Table';
+import StarProvider from './Context/StarProvider';
 
 function App() {
   return (
-    <span>StarWars - Victor Schlichting</span>
+    <StarProvider>
+      <Requisition />
+      <Table />
+    </StarProvider>
   );
 }
 
