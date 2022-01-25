@@ -5,9 +5,13 @@ import StarContext from './StarContext';
 
 export default function StarProvider({ children }) {
   const [data, setData] = useState([]);
+  const [filter, setFilter] = useState('');
+  const [renderFilter, setRenderFilter] = useState(false);
+
+  const context = { data, setData, filter, setFilter, renderFilter, setRenderFilter };
 
   return (
-    <StarContext.Provider value={ { data, setData } }>
+    <StarContext.Provider value={ context }>
       {children}
     </StarContext.Provider>
   );
