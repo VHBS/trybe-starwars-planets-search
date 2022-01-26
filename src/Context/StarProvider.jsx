@@ -16,6 +16,10 @@ export default function StarProvider({ children }) {
   // Salva os objetos filtrados
   const [filterDone, setFilterDone] = useState([]);
 
+  // Organiza a table
+  const [columnOrganize, setColumnOrganize] = useState('name');
+  const [sortOrganize, setSortOrganize] = useState('ASC');
+
   const context = {
     data,
     setData,
@@ -25,6 +29,12 @@ export default function StarProvider({ children }) {
     setFiltroNumero,
     filterDone,
     setFilterDone,
+    order: {
+      column: columnOrganize,
+      sort: sortOrganize,
+    },
+    setColumnOrganize,
+    setSortOrganize,
   };
 
   return (
