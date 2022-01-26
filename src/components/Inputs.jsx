@@ -2,19 +2,24 @@ import React, { useContext, useState } from 'react';
 import StarContext from '../Context/StarContext';
 
 export default function Inputs() {
-  const { filterName, setFilterName,
+  const COLUNAS = ['population', 'orbital_period',
+    'diameter',
+    'rotation_period', 'surface_water'];
+
+  const COLUMN_SIZE = 4;
+
+  const { data, filterName, setFilterName,
     filterByNumericValues, setFiltroNumero,
     filterDone, setFilterDone } = useContext(StarContext);
   const [column, setColumn] = useState('population');
   const [comparison, setComparison] = useState('maior que');
   const [valueNumber, setValue] = useState(0);
-  const [columnArr, setcolumnArr] = useState(['population', 'orbital_period',
-    'diameter',
-    'rotation_period', 'surface_water']);
+  const [columnArr, setcolumnArr] = useState(COLUNAS);
 
   const handleChange = ({ target }) => setFilterName(target.value);
 
   const filterNumeric = (array) => {
+    // console.log(array);
     array.forEach((filtro) => {
       const filterNumber = filterDone
         .filter((item) => {
@@ -25,24 +30,48 @@ export default function Inputs() {
           }
           return Number(item[filtro.column]) === Number(filtro.value);
         });
+      // console.log(filterNumber);
+      console.log(filtro);
       setFilterDone(filterNumber);
     });
   };
 
+  const updateInputFilter = (param, filter) => {
+    // console.log(param);
+    param.forEach((filtro) => {
+      const filtroArr = filter.filter((columnItem) => filtro.column !== columnItem);
+      // console.log(filtroArr);
+      setcolumnArr(filtroArr);
+      setColumn(filtroArr[0]);
+    });
+  };
+
   const handleClick = () => {
-    const filtros = [...filterByNumericValues,
-      {
-        column,
-        comparison,
-        value: valueNumber,
-      }];
+    if (filterByNumericValues.length <= COLUMN_SIZE) {
+      const filtros = [...filterByNumericValues,
+        { column, comparison, value: valueNumber }];
 
-    setFiltroNumero(filtros);
+      setFiltroNumero(filtros); // Passa para o Context a chave filterByNumericValues.
 
-    filterNumeric(filtros);
+      filterNumeric(filtros);
+      // console.log(filtros); // Funcão para adicionar o filter no render.
 
-    const columnArrFilter = columnArr.filter((item) => item !== column);
-    setcolumnArr(columnArrFilter);
+      updateInputFilter(filtros, columnArr); // Filtra o input select.
+    }
+  };
+
+  const deleteFilter = ({ target: { id } }) => {
+    const updateFilters = filterByNumericValues.filter((item) => item.column !== id);
+    const newColumns = [...columnArr, id];
+    setFiltroNumero(updateFilters);
+    if (updateFilters.length === 0) {
+      return setFilterDone(data);
+    }
+
+    filterNumeric(updateFilters);
+    // console.log(updateFilters); // Funcão para adicionar o filter no render.
+
+    setcolumnArr(newColumns); // A opção retorna pro input.
   };
 
   return (
@@ -99,5 +128,17 @@ export default function Inputs() {
       >
         Adicionar Filtro
       </button>
+      {filterByNumericValues.length > 0 && filterByNumericValues.map((item, index) => (
+        <div data-testid="filter" key={ item.column + index }>
+          <span>{`${item.column} ${item.comparison} ${item.value}`}</span>
+          <button
+            type="button"
+            id={ item.column }
+            onClick={ (e) => deleteFilter(e) }
+          >
+            X
+          </button>
+        </div>
+      ))}
     </div>);
 }
