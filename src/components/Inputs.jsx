@@ -8,6 +8,9 @@ export default function Inputs() {
   const [column, setColumn] = useState('population');
   const [comparison, setComparison] = useState('maior que');
   const [valueNumber, setValue] = useState(0);
+  const [columnArr, setcolumnArr] = useState(['population', 'orbital_period',
+    'diameter',
+    'rotation_period', 'surface_water']);
 
   const handleChange = ({ target }) => setFilterName(target.value);
 
@@ -22,25 +25,25 @@ export default function Inputs() {
           }
           return Number(item[filtro.column]) === Number(filtro.value);
         });
-      // console.log(filterNumber);
       setFilterDone(filterNumber);
     });
   };
 
   const handleClick = () => {
-    const filtros = [...filterByNumericValues, {
-      column,
-      comparison,
-      value: valueNumber,
-    }];
+    const filtros = [...filterByNumericValues,
+      {
+        column,
+        comparison,
+        value: valueNumber,
+      }];
 
     setFiltroNumero(filtros);
 
     filterNumeric(filtros);
-  };
 
-  const columnArr = ['population', 'orbital_period', 'diameter',
-    'rotation_period', 'surface_water'];
+    const columnArrFilter = columnArr.filter((item) => item !== column);
+    setcolumnArr(columnArrFilter);
+  };
 
   return (
     <div>
