@@ -3,19 +3,40 @@ import StarContext from '../Context/StarContext';
 
 export default function Inputs() {
   const { filterName, setFilterName,
-    filterByNumericValues, setFiltroNumero } = useContext(StarContext);
+    filterByNumericValues, setFiltroNumero,
+    filterDone, setFilterDone } = useContext(StarContext);
   const [column, setColumn] = useState('population');
   const [comparison, setComparison] = useState('maior que');
   const [valueNumber, setValue] = useState(0);
 
   const handleChange = ({ target }) => setFilterName(target.value);
 
+  const filterNumeric = (array) => {
+    array.forEach((filtro) => {
+      const filterNumber = filterDone
+        .filter((item) => {
+          if (filtro.comparison === 'maior que') {
+            return Number(item[filtro.column]) > Number(filtro.value);
+          } if (filtro.comparison === 'menor que') {
+            return Number(item[filtro.column]) < Number(filtro.value);
+          }
+          return Number(item[filtro.column]) === Number(filtro.value);
+        });
+      // console.log(filterNumber);
+      setFilterDone(filterNumber);
+    });
+  };
+
   const handleClick = () => {
-    setFiltroNumero([...filterByNumericValues, {
+    const filtros = [...filterByNumericValues, {
       column,
       comparison,
       value: valueNumber,
-    }]);
+    }];
+
+    setFiltroNumero(filtros);
+
+    filterNumeric(filtros);
   };
 
   const columnArr = ['population', 'orbital_period', 'diameter',

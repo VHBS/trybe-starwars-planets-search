@@ -13,6 +13,9 @@ export default function StarProvider({ children }) {
   // Number filters
   const [filtroNumero, setFiltroNumero] = useState([]);
 
+  // Salva os objetos filtrados
+  const [filterDone, setFilterDone] = useState([]);
+
   const context = {
     data,
     setData,
@@ -20,6 +23,8 @@ export default function StarProvider({ children }) {
     setFilterName,
     filterByNumericValues: filtroNumero,
     setFiltroNumero,
+    filterDone,
+    setFilterDone,
   };
 
   return (
